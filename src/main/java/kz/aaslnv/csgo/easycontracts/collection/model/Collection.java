@@ -1,7 +1,6 @@
 package kz.aaslnv.csgo.easycontracts.collection.model;
 
 import kz.aaslnv.csgo.easycontracts.item.model.Item;
-import kz.aaslnv.csgo.easycontracts.parser.Parsable;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,7 +9,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "collection")
-public class Collection implements Parsable {
+public class Collection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +22,7 @@ public class Collection implements Parsable {
     private List<Item> items;
 
     @Column(name = "is_tradable", nullable = false)
-    private boolean tradable;
+    private boolean tradable = true;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted;

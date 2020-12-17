@@ -10,6 +10,7 @@ import kz.aaslnv.csgo.easycontracts.enumiration.ItemRarity;
 import kz.aaslnv.csgo.easycontracts.item.model.Item;
 import kz.aaslnv.csgo.easycontracts.item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import static kz.aaslnv.csgo.easycontracts.util.Constant.CONTRACT_REQUIRED_ITEMS_COUNT;
 
 @Service
+@Qualifier("one")
 public class OneCollectionContractCalculator implements IContractCalculator {
 
     private final CollectionService collectionService;
@@ -61,7 +63,8 @@ public class OneCollectionContractCalculator implements IContractCalculator {
         double step = 0.001;
         double minFloat = itemService.getMinFloatByItemsAndRarity(items, rarity);
         double maxFloat = itemService.getMaxFloatByItemsAndRarity(items, rarity);
-        ItemRarity nextRarity = ItemRarity.getRarityByPriority(rarity.getPriority() + 1);
+        ItemRarity nextRarity = ItemRarity.getRarityByPriority(rarity.getPriority() + 1)
+                .orElseThrow(() -> new RuntimeException("Incorrect priority of rarity"));
 
         if (!nextRarity.isCanBeTraded()) {
             return null;

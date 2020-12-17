@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -19,5 +20,13 @@ public class CollectionService {
 
     public List<Collection> getAll(){
         return collectionRepository.findAllByDeletedIsFalseAndTradableIsTrue();
+    }
+
+    public void saveAll(List<Collection> collections){
+        collections = collections.stream()
+                .map(collection -> collectionRepository.findByName(collection.getName()).orElse(collection))
+                .collect(Collectors.toList());
+
+        collectionRepository.saveAll(collections);
     }
 }
