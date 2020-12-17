@@ -1,0 +1,20 @@
+application:
+  contract:
+    parse_collections: false # Необходимо ли парсить коллекции и предметы
+    parse_prices: true # Необходимо ли парсить ли цены предметов
+    include_stat_trak: false # Включить ли StatTrak предметы в поиск
+    collection_type: one # Тип контрактов. one - в рамках одной коллекции, all - в рамках всех коллекций
+    tm_commission: 0 # Комиссия торговой площадки, на которой планируется продавать полученные предметы
+
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/econtracts
+    username: econtracts_user
+    password: stcartnoce
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    show-sql: false
+    hibernate:
+      ddl-auto: create
