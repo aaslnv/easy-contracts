@@ -22,11 +22,11 @@ public class CollectionService {
         return collectionRepository.findAllByDeletedIsFalseAndTradableIsTrue();
     }
 
-    public void saveAll(List<Collection> collections){
+    public List<Collection> saveAll(List<Collection> collections){
         collections = collections.stream()
-                .map(collection -> collectionRepository.findByName(collection.getName()).orElse(collection))
+                .filter(collection -> !collectionRepository.findByName(collection.getName()).isPresent())
                 .collect(Collectors.toList());
 
-        collectionRepository.saveAll(collections);
+        return collectionRepository.saveAll(collections);
     }
 }

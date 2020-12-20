@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service(value = "all")
 public class AllCollectionsContractCalculator implements IContractCalculator {
 
     @Override
-    public List<Contract> calculate(boolean isStatTrak) {
+    public List<Contract> calculate() {
         return new ArrayList<>();
     }
 }

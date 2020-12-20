@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CsgoExchangeCollectionParser implements IParser<Collection> {
+public class CsgoExchangeCollectionsParser implements IParser<Collection> {
 
     public static final String BASE_URL = "https://csgo.exchange/collection";
     public static final String COLLECTION_VIEW_ENDPOINT = "/view/";
     private final JsoupConnector jsoupConnector;
 
     @Autowired
-    public CsgoExchangeCollectionParser(JsoupConnector jsoupConnector) {
+    public CsgoExchangeCollectionsParser(JsoupConnector jsoupConnector) {
         this.jsoupConnector = jsoupConnector;
     }
 
@@ -72,6 +72,7 @@ public class CsgoExchangeCollectionParser implements IParser<Collection> {
         Document document;
 
         try {
+            log.info("Trying to connect to {}", BASE_URL + COLLECTION_VIEW_ENDPOINT + collectionId);
             document = jsoupConnector.connect(BASE_URL + COLLECTION_VIEW_ENDPOINT + collectionId);
         } catch (IOException e){
             log.error("Could not connect to {}", BASE_URL + COLLECTION_VIEW_ENDPOINT + collectionId);

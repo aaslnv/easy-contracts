@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IContractCalculator {
 
-    List<Contract> calculate(boolean isStatTrak);
+    List<Contract> calculate();
 }

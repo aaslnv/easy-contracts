@@ -23,7 +23,7 @@ public class ContractItemService {
         this.calculator = calculator;
     }
 
-    public ContractItem getContractItemWithLowestPriceByRarityAndFloat(List<Item> items, ItemRarity rarity,
+    public Optional<ContractItem> getContractItemWithLowestPriceByRarityAndFloat(List<Item> items, ItemRarity rarity,
                                                                        double itemFloat, boolean isStatTrak){
         ItemQuality quality = calculator.getQualityByFloat(itemFloat);
 
@@ -31,8 +31,7 @@ public class ContractItemService {
                 .filter(item -> item.getRarity() == rarity)
                 .map(item -> map(item, quality, isStatTrak).orElse(null))
                 .filter(item -> Objects.nonNull(item) && item.getPrice().intValue() != 0)
-                .min(Comparator.comparing(item -> item.getPrice().doubleValue()))
-                .orElseThrow(() -> new RuntimeException("Item with lowest price not found"));
+                .min(Comparator.comparing(item -> item.getPrice().doubleValue()));
     }
 
     public Optional<ContractItem> map(Item item, ItemQuality quality, boolean isStatTrak){

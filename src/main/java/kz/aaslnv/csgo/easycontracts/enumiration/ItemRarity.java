@@ -11,17 +11,18 @@ import java.util.Optional;
 @AllArgsConstructor
 public enum ItemRarity {
 
-    CONSUMER("Consumer",1, false),
-    INDUSTRIAL("Industrial",2, true),
-    MIL_SPEC("Mil-Spec",3, true),
-    RESTRICTED("Restricted",4, true),
-    CLASSIFIED("Classified",5, true),
-    COVERT("Covert",6, true),
-    CONTRABAND("Contraband",7, false);
+    CONSUMER("Consumer",1, false, true),
+    INDUSTRIAL("Industrial",2, true, true),
+    MIL_SPEC("Mil-Spec",3, true, true),
+    RESTRICTED("Restricted",4, true, true),
+    CLASSIFIED("Classified",5, true, true),
+    COVERT("Covert",6, true, true),
+    CONTRABAND("Contraband",7, false, false);
 
     private final String name;
     private final int priority;
     private final boolean canBeTraded;
+    private final boolean tradable;
 
     public static Optional<ItemRarity> getRarityByPriority(int priority) {
         return Arrays.stream(ItemRarity.values())
