@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "application.api_keys.steamapis",
+      "type": "java.lang.String",
+      "description": "API key for steamapis.com."
+    },
+    {
+      "name": "application.contract.parse_collections",
+      "type": "java.lang.String",
+      "description": "Is it necessary to parse collections, items and floats."
+    },
+    {
+      "name": "application.contract.parse_prices",
+      "type": "java.lang.String",
+      "description": "Is it necessary to parse item prices."
+    },
+    {
+      "name": "application.contract.include_stat_trak",
+      "type": "java.lang.String",
+      "description": "Is it necessary to calculate StatTrak items."
+    },
+    {
+      "name": "application.contract.type",
+      "type": "java.lang.String",
+      "description": "Contract type."
+    },
+    {
+      "name": "application.contract.result",
+      "type": "java.lang.String",
+      "description": "Where to record the result."
+    },
+    {
+      "name": "application.contract.trade_market",
+      "type": "java.lang.String",
+      "description": "The trading market at the prices of which the calculation is made."
+    }
+  ]
+}

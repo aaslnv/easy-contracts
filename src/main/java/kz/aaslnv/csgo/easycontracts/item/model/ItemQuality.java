@@ -1,4 +1,4 @@
-package kz.aaslnv.csgo.easycontracts.enumiration;
+package kz.aaslnv.csgo.easycontracts.item.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +20,6 @@ public enum ItemQuality {
     private final String name;
     private final double minFloat;
     private final double maxFloat;
-
-    public static List<ItemQuality> getQualitiesBetweenFloats(double minFloat, double maxFloat){
-        return Arrays.stream(ItemQuality.values())
-                .filter(quality -> (quality.getMinFloat() < maxFloat && quality.getMaxFloat() > minFloat))
-                .collect(Collectors.toList());
-    }
 
     public String getStyledName(){
         return "(" + name + ")";

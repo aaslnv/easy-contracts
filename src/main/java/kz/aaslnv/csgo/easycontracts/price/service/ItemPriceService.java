@@ -38,7 +38,6 @@ public class ItemPriceService {
     }
 
     public void deleteAllByTradeMarket(TradeMarket tradeMarket){
-        System.out.println(tradeMarket);
         itemPriceRepository.deleteAllByTradeMarket(tradeMarket);
     }
 }

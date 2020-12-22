@@ -1,10 +1,11 @@
 package kz.aaslnv.csgo.easycontracts.contract.service;
 
-import kz.aaslnv.csgo.easycontracts.calculator.Calculator;
 import kz.aaslnv.csgo.easycontracts.contract.model.ContractItem;
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemQuality;
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemRarity;
+import kz.aaslnv.csgo.easycontracts.enumiration.TradeMarket;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemQuality;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemRarity;
 import kz.aaslnv.csgo.easycontracts.item.model.Item;
+import kz.aaslnv.csgo.easycontracts.item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,31 +17,31 @@ import java.util.Optional;
 @Service
 public class ContractItemService {
 
-    private final Calculator calculator;
+    private final ItemService itemService;
 
     @Autowired
-    public ContractItemService(Calculator calculator) {
-        this.calculator = calculator;
+    public ContractItemService(ItemService itemService) {
+        this.itemService = itemService;
     }
 
     public Optional<ContractItem> getContractItemWithLowestPriceByRarityAndFloat(List<Item> items, ItemRarity rarity,
-                                                                       double itemFloat, boolean isStatTrak){
-        ItemQuality quality = calculator.getQualityByFloat(itemFloat);
+                                                                                 double itemFloat, boolean isStatTrak,
+                                                                                 TradeMarket tradeMarket){
+        ItemQuality quality = itemService.getQualityByFloat(itemFloat);
 
         return items.stream()
                 .filter(item -> item.getRarity() == rarity)
-                .map(item -> map(item, quality, isStatTrak).orElse(null))
-                .filter(item -> Objects.nonNull(item) && item.getPrice().intValue() != 0)
+                .map(item -> map(item, quality, isStatTrak, tradeMarket).orElse(null))
+                .filter(item -> Objects.nonNull(item) && item.getPrice().doubleValue() != 0)
                 .min(Comparator.comparing(item -> item.getPrice().doubleValue()));
     }
 
-    public Optional<ContractItem> map(Item item, ItemQuality quality, boolean isStatTrak){
-        String name = item.getName();
-        ItemRarity rarity = item.getRarity();
+    public Optional<ContractItem> map(Item item, ItemQuality quality, boolean isStatTrak, TradeMarket tradeMarket){
         return item.getPrices().stream()
-                .filter(itemPrice -> itemPrice.getQuality() == quality && itemPrice.isStatTrak() == isStatTrak)
+                .filter(itemPrice -> itemPrice.getQuality() == quality && itemPrice.isStatTrak() == isStatTrak &&
+                        itemPrice.getTradeMarket() == tradeMarket)
                 .findFirst()
-                .map(itemPrice -> new ContractItem(name, quality, rarity, itemPrice.getPrice()));
+                .map(itemPrice -> new ContractItem(item.getName(), quality, item.getRarity(), itemPrice.getPrice()));
     }
 
 }

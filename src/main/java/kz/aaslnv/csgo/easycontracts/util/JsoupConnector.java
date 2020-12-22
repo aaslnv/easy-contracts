@@ -3,11 +3,11 @@ package kz.aaslnv.csgo.easycontracts.util;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Service
+@Component
 public class JsoupConnector {
 
     public static final String JSOUP_CONNECTION_USER_AGENT = "Mozilla";

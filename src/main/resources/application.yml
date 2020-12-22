@@ -3,12 +3,11 @@ application:
     steamapis: 6WJY9LtExOCmvzVeqw8GaAxjwWM
   contract:
     parse_collections: false # Необходимо ли парсить коллекции и предметы
-    parse_prices: true # Необходимо ли парсить ли цены предметов
+    parse_prices: false # Необходимо ли парсить ли цены предметов
     include_stat_trak: false # Включить ли StatTrak предметы в поиск
     type: one # Тип контрактов. one - в рамках одной коллекции, all - в рамках всех коллекций
-    tm_commission: 0 # Комиссия торговой площадки, на которой планируется продавать полученные предметы
     result: file # Куда записывать результат. file - файл в корне проекта, db - в базу данных
-    trade_market: STEAM # Торговая площадка, по ценам которого ведется расчет. STEAM, LOOT_FARM
+    trade_market: STEAM # The trading market at the prices of which the calculation is made. STEAM, LOOT_FARM
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver

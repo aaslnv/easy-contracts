@@ -1,6 +1,6 @@
 package kz.aaslnv.csgo.easycontracts.price.model;
 
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemQuality;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemQuality;
 import kz.aaslnv.csgo.easycontracts.enumiration.TradeMarket;
 import kz.aaslnv.csgo.easycontracts.item.model.Item;
 import lombok.AllArgsConstructor;

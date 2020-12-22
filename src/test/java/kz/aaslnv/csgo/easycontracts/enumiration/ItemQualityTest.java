@@ -1,8 +1,11 @@
 package kz.aaslnv.csgo.easycontracts.enumiration;
 
+import kz.aaslnv.csgo.easycontracts.item.model.ItemQuality;
+import kz.aaslnv.csgo.easycontracts.item.service.ItemService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
@@ -11,6 +14,9 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ItemQualityTest {
+
+    @InjectMocks
+    private ItemService itemService;
 
     @Test
     public void test_getQualitiesBetweenFloats(){
@@ -28,12 +34,12 @@ public class ItemQualityTest {
         List<ItemQuality> preparedResult5 = Arrays.asList(ItemQuality.MW, ItemQuality.FT, ItemQuality.WW);
         List<ItemQuality> preparedResult6 = Collections.singletonList(ItemQuality.MW);
 
-        List<ItemQuality> result1 = ItemQuality.getQualitiesBetweenFloats(minFloat1, maxFloat1);
-        List<ItemQuality> result2 = ItemQuality.getQualitiesBetweenFloats(minFloat2, maxFloat2);
-        List<ItemQuality> result3 = ItemQuality.getQualitiesBetweenFloats(minFloat3, maxFloat3);
-        List<ItemQuality> result4 = ItemQuality.getQualitiesBetweenFloats(minFloat4, maxFloat4);
-        List<ItemQuality> result5 = ItemQuality.getQualitiesBetweenFloats(minFloat5, maxFloat5);
-        List<ItemQuality> result6 = ItemQuality.getQualitiesBetweenFloats(minFloat6, maxFloat6);
+        List<ItemQuality> result1 = itemService.getQualitiesBetweenFloats(minFloat1, maxFloat1);
+        List<ItemQuality> result2 = itemService.getQualitiesBetweenFloats(minFloat2, maxFloat2);
+        List<ItemQuality> result3 = itemService.getQualitiesBetweenFloats(minFloat3, maxFloat3);
+        List<ItemQuality> result4 = itemService.getQualitiesBetweenFloats(minFloat4, maxFloat4);
+        List<ItemQuality> result5 = itemService.getQualitiesBetweenFloats(minFloat5, maxFloat5);
+        List<ItemQuality> result6 = itemService.getQualitiesBetweenFloats(minFloat6, maxFloat6);
 
         Assert.assertEquals(preparedResult1, result1);
         Assert.assertEquals(preparedResult2, result2);

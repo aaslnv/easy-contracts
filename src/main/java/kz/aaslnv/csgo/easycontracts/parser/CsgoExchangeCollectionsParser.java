@@ -1,30 +1,33 @@
 package kz.aaslnv.csgo.easycontracts.parser;
 
 import kz.aaslnv.csgo.easycontracts.collection.model.Collection;
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemRarity;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemRarity;
 import kz.aaslnv.csgo.easycontracts.item.model.Item;
+import kz.aaslnv.csgo.easycontracts.item.service.ItemService;
 import kz.aaslnv.csgo.easycontracts.util.JsoupConnector;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Component
 public class CsgoExchangeCollectionsParser implements IParser<Collection> {
 
     public static final String BASE_URL = "https://csgo.exchange/collection";
     public static final String COLLECTION_VIEW_ENDPOINT = "/view/";
     private final JsoupConnector jsoupConnector;
+    private final ItemService itemService;
 
     @Autowired
-    public CsgoExchangeCollectionsParser(JsoupConnector jsoupConnector) {
+    public CsgoExchangeCollectionsParser(JsoupConnector jsoupConnector, ItemService itemService) {
         this.jsoupConnector = jsoupConnector;
+        this.itemService = itemService;
     }
 
     @Override
@@ -84,7 +87,7 @@ public class CsgoExchangeCollectionsParser implements IParser<Collection> {
         return itemElements.stream()
                 .map(element -> {
                     String name = element.attr("data-name");
-                    ItemRarity rarity = ItemRarity.getRarityByName(element.attr("data-quality"))
+                    ItemRarity rarity = itemService.getRarityByName(element.attr("data-quality"))
                             .orElseThrow(() -> new RuntimeException("Rarity not found"));
                     double minFloat = Double.parseDouble(element.attr("data-minwear"));
                     double maxFloat = Double.parseDouble(element.attr("data-maxwear"));

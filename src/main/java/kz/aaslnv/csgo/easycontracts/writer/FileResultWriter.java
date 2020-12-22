@@ -22,27 +22,26 @@ import static java.lang.String.*;
 @Service(value = "file")
 public class FileResultWriter implements IResultWriter{
 
+    @Value("${application.contract.trade_market}")
+    private TradeMarket tradeMarket;
     public static final String TRADE_MARKET_LINE = "Торговая площадка: %s \n";
     public static final String CONTRACTS_FOUND_LINE = "Контрактов найдено: %s \n";
     public static final String CONTRACTS_DELIMITER = "----------------------------------------------\n";
     public static final String COLLECTION_LINE = "Коллекция: %s \n";
     public static final String REQUIRED_ITEMS_LINE = "Необходимые предметы: \n";
-    public static final String REQUIRED_ITEM_LINE = "%s %s - %s x%s. Мин. флоат = %s, макс. флоат = %s \n";
-    public static final String CONTRACT_PRICE = "Стоимость контракта: %s \n";
+    public static final String REQUIRED_ITEM_LINE = "%s %s - %s$ x%s. Мин. флоат = %s, макс. флоат = %s \n";
+    public static final String CONTRACT_PRICE = "Стоимость контракта: %s$ \n";
     public static final String POSSIBLE_ITEMS_LINE = "Возможный результат: \n";
-    public static final String POSSIBLE_ITEM_LINE = "%s %s - %s \n";
+    public static final String POSSIBLE_ITEM_LINE = "%s %s - %s$ \n";
     public static final String PROFITABLE_LINE = "Профитность: %s%% \n";
-
-    @Value("${application.contract.trade_market}")
-    private TradeMarket tradeMarket;
 
     @Override
     public void write(List<Contract> contracts) {
-        File file = new File("result.txt");
+        File file = new File("target/" + tradeMarket.name().toLowerCase() + "_result.txt");
 
         try {
-            if (!file.exists()){
-                file.createNewFile();
+            if (file.createNewFile()){
+                log.trace("File {} created", file.getName());
             }
         } catch (IOException e){
             log.error(e.getMessage());
@@ -72,7 +71,6 @@ public class FileResultWriter implements IResultWriter{
                 .map(ContractItem::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-
         contract.getRequiredItems().stream()
                 .distinct()
                 .forEach(contractItem -> {
@@ -99,6 +97,5 @@ public class FileResultWriter implements IResultWriter{
         }
 
         writer.write(format(PROFITABLE_LINE, priceFormat.format(contract.getProfitability() * 100d)));
-
     }
 }

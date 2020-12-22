@@ -1,6 +1,6 @@
 package kz.aaslnv.csgo.easycontracts.parser;
 
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemQuality;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemQuality;
 import kz.aaslnv.csgo.easycontracts.enumiration.TradeMarket;
 import kz.aaslnv.csgo.easycontracts.item.model.Item;
 import kz.aaslnv.csgo.easycontracts.item.service.ItemService;
@@ -13,7 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ import java.util.*;
 import static kz.aaslnv.csgo.easycontracts.util.Constant.STAT_TRAK_PREFIX;
 
 @Slf4j
-@Service(value = "STEAM")
+@Component(value = "STEAM")
 public class SteamApisPricesParser implements IParser<ItemPrice> {
 
     public static final String BASE_URL = "http://api.steamapis.com/market/items/730";
@@ -52,11 +52,9 @@ public class SteamApisPricesParser implements IParser<ItemPrice> {
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
-
             if (!response.isSuccessful()){
                 throw new RuntimeException("Unexpected code " + response);
             }
-
             if (response.body() == null){
                 throw new RuntimeException("Response body is null");
             }
@@ -73,7 +71,7 @@ public class SteamApisPricesParser implements IParser<ItemPrice> {
 
     private List<ItemPrice> processParsePrices(Item item, JSONArray dataArray){
         List<ItemPrice> itemPrices = new ArrayList<>();
-        List<ItemQuality> itemQualities = ItemQuality.getQualitiesBetweenFloats(item.getMinFloat(), item.getMaxFloat());
+        List<ItemQuality> itemQualities = itemService.getQualitiesBetweenFloats(item.getMinFloat(), item.getMaxFloat());
 
         itemQualities.forEach(quality -> {
             String itemFullName = item.getName() + " " + quality.getStyledName();

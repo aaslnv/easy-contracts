@@ -1,12 +1,12 @@
 package kz.aaslnv.csgo.easycontracts.calculator;
 
 import kz.aaslnv.csgo.easycontracts.contract.model.Contract;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service(value = "all")
+@Component(value = "all")
 public class AllCollectionsContractCalculator implements IContractCalculator {
 
     @Override

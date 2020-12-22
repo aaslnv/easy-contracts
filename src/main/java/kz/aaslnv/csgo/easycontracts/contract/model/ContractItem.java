@@ -1,7 +1,7 @@
 package kz.aaslnv.csgo.easycontracts.contract.model;
 
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemQuality;
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemRarity;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemQuality;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemRarity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

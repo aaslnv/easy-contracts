@@ -1,6 +1,6 @@
 package kz.aaslnv.csgo.easycontracts.price.repository;
 
-import kz.aaslnv.csgo.easycontracts.enumiration.ItemQuality;
+import kz.aaslnv.csgo.easycontracts.item.model.ItemQuality;
 import kz.aaslnv.csgo.easycontracts.enumiration.TradeMarket;
 import kz.aaslnv.csgo.easycontracts.price.model.ItemPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
