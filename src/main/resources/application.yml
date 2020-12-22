@@ -8,6 +8,7 @@ application:
     type: one # Тип контрактов. one - в рамках одной коллекции, all - в рамках всех коллекций
     tm_commission: 0 # Комиссия торговой площадки, на которой планируется продавать полученные предметы
     result: file # Куда записывать результат. file - файл в корне проекта, db - в базу данных
+    trade_market: STEAM # Торговая площадка, по ценам которого ведется расчет. STEAM, LOOT_FARM
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver

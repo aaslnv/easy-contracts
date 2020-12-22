@@ -45,11 +45,10 @@ public class OneCollectionContractCalculator implements IContractCalculator {
         List<Collection> collections = collectionService.getAll();
 
         collections.forEach(collection -> {
-
             List<ItemRarity> itemRarities = collection.getItems().stream()
                     .map(Item::getRarity)
                     .distinct()
-                    .filter(rarity -> rarity.isCanBeTraded() && rarity.isTradable())
+                    .filter(rarity -> rarity.isCanBeTraded() || rarity.isTradable())
                     .collect(Collectors.toList());
 
             for (ItemRarity rarity : itemRarities) {
@@ -73,8 +72,8 @@ public class OneCollectionContractCalculator implements IContractCalculator {
         ItemRarity nextRarity = ItemRarity.getRarityByPriority(rarity.getPriority() + 1)
                 .orElseThrow(() -> new RuntimeException("Incorrect priority of rarity"));
 
-        if (!nextRarity.isCanBeTraded()) {
-            return null;
+        if (!nextRarity.isCanBeTraded() || !rarity.isTradable()) {
+            return new ArrayList<>();
         }
 
         List<Item> nextRarityItems = items.stream()
@@ -116,13 +115,13 @@ public class OneCollectionContractCalculator implements IContractCalculator {
                 double resultFloat = calculator.calculateResultFloat(item.getMinFloat(), item.getMaxFloat(), i);
                 ItemQuality quality = calculator.getQualityByFloat(resultFloat);
                 Optional<ContractItem> contractItemOptional = contractItemService.map(item, quality, includeStatTrak);
-                contractItemOptional.ifPresent(requiredItems::add);
+                contractItemOptional.ifPresent(resultItems::add);
             }
 
             BigDecimal contractPrice = requiredItem.getPrice().multiply(new BigDecimal(CONTRACT_REQUIRED_ITEMS_COUNT));
             double profitability = calculator.calculateProfitability(contractPrice, resultItems);
 
-            contract = new Contract(contractPrice, i, i, requiredItems, resultItems, profitability);
+            contract = new Contract(contractPrice, i, i, collection, requiredItems, resultItems, profitability);
 
             if (contracts.size() == 0 || !lastContract.getResultItems().equals(resultItems)) {
                 contracts.add(contract);

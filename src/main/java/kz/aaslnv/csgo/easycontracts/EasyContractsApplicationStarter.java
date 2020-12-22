@@ -4,6 +4,7 @@ import kz.aaslnv.csgo.easycontracts.calculator.IContractCalculator;
 import kz.aaslnv.csgo.easycontracts.collection.model.Collection;
 import kz.aaslnv.csgo.easycontracts.collection.service.CollectionService;
 import kz.aaslnv.csgo.easycontracts.contract.model.Contract;
+import kz.aaslnv.csgo.easycontracts.enumiration.TradeMarket;
 import kz.aaslnv.csgo.easycontracts.parser.IParser;
 import kz.aaslnv.csgo.easycontracts.price.model.ItemPrice;
 import kz.aaslnv.csgo.easycontracts.price.service.ItemPriceService;
@@ -26,11 +27,17 @@ public class EasyContractsApplicationStarter {
     @Resource(name = "${application.contract.result}")
     private IResultWriter resultWriter;
 
+    @Resource(name = "${application.contract.trade_market}")
+    private IParser<ItemPrice> pricesParser;
+
     @Value("${application.contract.parse_collections}")
     private boolean parseCollections;
 
     @Value("${application.contract.parse_prices}")
     private boolean parsePrices;
+
+    @Value("${application.contract.trade_market}")
+    private TradeMarket tradeMarket;
 
     private final CollectionService collectionService;
 
@@ -38,12 +45,11 @@ public class EasyContractsApplicationStarter {
 
     private final IParser<Collection> collectionsParser;
 
-    private final IParser<ItemPrice> pricesParser;
 
-    public EasyContractsApplicationStarter(CollectionService collectionService, ItemPriceService itemPriceService, IParser<ItemPrice> pricesParser, IParser<Collection> collectionsParser) {
+    public EasyContractsApplicationStarter(CollectionService collectionService, ItemPriceService itemPriceService,
+                                           IParser<Collection> collectionsParser) {
         this.collectionService = collectionService;
         this.itemPriceService = itemPriceService;
-        this.pricesParser = pricesParser;
         this.collectionsParser = collectionsParser;
     }
 
@@ -59,6 +65,7 @@ public class EasyContractsApplicationStarter {
         if (parsePrices){
             log.info("Prices parsing started");
             List<ItemPrice> prices = pricesParser.parse();
+            itemPriceService.deleteAllByTradeMarket(tradeMarket);
             itemPriceService.saveAll(prices);
             log.info("Prices parsing finished. All prices are up-to-date");
         }
@@ -67,6 +74,8 @@ public class EasyContractsApplicationStarter {
         List<Contract> contracts = contractCalculator.calculate();
         log.info("Contracts calculating finished. Found {} contracts", contracts.size());
 
+        log.info("Contracts result writing started");
         resultWriter.write(contracts);
+        log.info("Contracts result writing finished");
     }
 }

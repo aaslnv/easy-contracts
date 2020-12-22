@@ -42,6 +42,6 @@ public class Calculator {
 
         double averageProfit = sum.doubleValue() / resultItemCount;
 
-        return (averageProfit - tradeMarketCommission) / contractPrice.doubleValue() - 1;
+        return (averageProfit * (1 - tradeMarketCommission)) / contractPrice.doubleValue() - 1;
     }
 }
