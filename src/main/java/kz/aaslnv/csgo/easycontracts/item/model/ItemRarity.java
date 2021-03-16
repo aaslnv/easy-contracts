@@ -16,7 +16,7 @@ public enum ItemRarity {
     MIL_SPEC("Mil-Spec",3, true, true),
     RESTRICTED("Restricted",4, true, true),
     CLASSIFIED("Classified",5, true, true),
-    COVERT("Covert",6, true, true),
+    COVERT("Covert",6, true, false),
     CONTRABAND("Contraband",7, false, false);
 
     private final String name;

@@ -52,9 +52,12 @@ public class FileResultWriter implements IResultWriter{
             writer.write(format(TRADE_MARKET_LINE, tradeMarket));
             writer.write(format(CONTRACTS_FOUND_LINE, contracts.size()));
             writer.write(CONTRACTS_DELIMITER);
+            int counter = 1;
             for (Contract contract : contracts) {
+                writer.write(counter +". ");
                 processWrite(writer, contract);
                 writer.write(CONTRACTS_DELIMITER);
+                ++counter;
             }
             writer.flush();
         } catch (IOException e) {

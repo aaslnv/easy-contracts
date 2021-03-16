@@ -6,9 +6,9 @@ import kz.aaslnv.csgo.easycontracts.contract.model.Contract;
 import kz.aaslnv.csgo.easycontracts.contract.model.ContractItem;
 import kz.aaslnv.csgo.easycontracts.contract.service.ContractItemService;
 import kz.aaslnv.csgo.easycontracts.enumiration.TradeMarket;
+import kz.aaslnv.csgo.easycontracts.item.model.Item;
 import kz.aaslnv.csgo.easycontracts.item.model.ItemQuality;
 import kz.aaslnv.csgo.easycontracts.item.model.ItemRarity;
-import kz.aaslnv.csgo.easycontracts.item.model.Item;
 import kz.aaslnv.csgo.easycontracts.item.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,8 @@ public class OneCollectionContractCalculator implements IContractCalculator {
     private boolean includeStatTrak;
     @Value("${application.contract.trade_market}")
     private TradeMarket tradeMarket;
+    @Value("${application.contract.min_floats_difference}")
+    private double minFloatDifference;
     private final CollectionService collectionService;
     private final ItemService itemService;
     private final ContractItemService contractItemService;
@@ -50,6 +52,7 @@ public class OneCollectionContractCalculator implements IContractCalculator {
                     .map(Item::getRarity)
                     .distinct()
                     .filter(ItemRarity::isTradable)
+                    .sorted(Comparator.comparing(ItemRarity::getPriority))
                     .collect(Collectors.toList());
 
             for (ItemRarity rarity : itemRarities) {
@@ -61,9 +64,12 @@ public class OneCollectionContractCalculator implements IContractCalculator {
         });
         return contracts.stream()
                 .filter(contract -> contract.getProfitability() > 0)
+                .filter(contract -> (contract.getMaxFloat() - contract.getMinFloat()) > minFloatDifference )
                 .sorted(Comparator.comparing(Contract::getProfitability).reversed())
                 .collect(Collectors.toList());
     }
+
+
 
     public List<Contract> processCalculateContract(Collection collection, ItemRarity rarity) {
         List<Contract> contracts = new ArrayList<>();
@@ -71,10 +77,9 @@ public class OneCollectionContractCalculator implements IContractCalculator {
         double step = 0.001;
         double minFloat = itemService.getMinFloatByItemsAndRarity(items, rarity);
         double maxFloat = itemService.getMaxFloatByItemsAndRarity(items, rarity);
-        ItemRarity nextRarity = itemService.getRarityByPriority(rarity.getPriority() + 1)
-                .orElseThrow(() -> new RuntimeException("Incorrect priority of rarity"));
+        ItemRarity nextRarity = itemService.getRarityByPriority(rarity.getPriority() + 1).orElse(null);
 
-        if (!nextRarity.isCanBeTraded() || !rarity.isTradable()) {
+        if (Objects.isNull(nextRarity) || !nextRarity.isCanBeTraded() || !rarity.isTradable()) {
             return new ArrayList<>();
         }
 
@@ -83,19 +88,17 @@ public class OneCollectionContractCalculator implements IContractCalculator {
                 .collect(Collectors.toList());
 
         for (double i = maxFloat - step; i > minFloat; i -= step) {
-            Contract contract;
             ContractItem requiredItem;
-            List<ContractItem> requiredItems;
-            List<ContractItem> resultItems;
-            Contract lastContract = contracts.stream()
-                    .reduce((first, second) -> second)
-                    .orElse(null);
+            Contract contract;
 
             if (i == 0.45 || i == 0.38 || i == 0.15 || i == 0.07 || i == 0) {
                 continue;
             }
 
-            resultItems = new ArrayList<>();
+            List<ContractItem> resultItems = new ArrayList<>();
+            Contract lastContract = contracts.stream()
+                    .reduce((first, second) -> second)
+                    .orElse(null);
             Optional<ContractItem> optionalRequiredItem = contractItemService
                     .getContractItemWithLowestPriceByRarityAndFloat(items, rarity, i, includeStatTrak, tradeMarket);
 
@@ -107,7 +110,7 @@ public class OneCollectionContractCalculator implements IContractCalculator {
                 continue;
             }
 
-            requiredItems = new ArrayList<>(10);
+            List<ContractItem> requiredItems = new ArrayList<>(10);
 
             for (int j = 0; j < CONTRACT_REQUIRED_ITEMS_COUNT; j++) {
                 requiredItems.add(requiredItem);

@@ -7,7 +7,8 @@ application:
     include_stat_trak: false # Включить ли StatTrak предметы в поиск
     type: one # Тип контрактов. one - в рамках одной коллекции, all - в рамках всех коллекций
     result: file # Куда записывать результат. file - файл в корне проекта, db - в базу данных
-    trade_market: STEAM # The trading market at the prices of which the calculation is made. STEAM, LOOT_FARM
+    trade_market: LOOT_FARM # The trading market at the prices of which the calculation is made. STEAM, LOOT_FARM
+    min_floats_difference: 0.03
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver

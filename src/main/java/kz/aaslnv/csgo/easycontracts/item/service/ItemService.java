@@ -37,8 +37,8 @@ public class ItemService {
     public double getMaxFloatByItemsAndRarity(List<Item> items, ItemRarity rarity){
         return items.stream()
                 .filter(item -> item.getRarity() == rarity)
-                .max(Comparator.comparing(Item::getMinFloat))
-                .map(Item::getMinFloat)
+                .max(Comparator.comparing(Item::getMaxFloat))
+                .map(Item::getMaxFloat)
                 .orElseThrow(() -> new RuntimeException("Max float not found"));
     }
 
